@@ -1,8 +1,7 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module TSP where
+module TSPInstance where
 
-import           Utils
 import           Node
 
 import           Text.Parsec
@@ -28,26 +27,23 @@ parseTSPInstance :: Parser TSPInstance
 parseTSPInstance = do skipMany (noneOf " ")
                       skipMany (oneOf " ")
                       nm <- many (noneOf "\n")
-                      skipMany (oneOf "\n")
-                      skipLine
-                      skipLine
+                      jumpTwoLines
                       skipMany (noneOf " ")
                       skipMany (oneOf " ")
                       numNodes <- toInt <$> many (noneOf "\n")
-                      skipMany (oneOf "\n")
-                      skipLine
-                      skipLine
+                      jumpTwoLines
                       nodes <- replicateM numNodes parseNode
                       case nodes of
                         [] -> error "empty list of nodes is not allowed"
                         (h : t) -> return $ TSPInstance numNodes nm (h NE.:| t)
   where toInt s = read s :: Int
         skipLine = skipMany (noneOf "\n") >> skipMany (oneOf "\n")
+        jumpTwoLines = skipMany (oneOf "\n") >> skipLine >> skipLine
 
 
 type PartialSolution = ([Node], [Node])
 
 eval :: PartialSolution -> Double
-eval ([], _)    = error "trying to eval the empty list"
+eval ([], _)         = error "trying to eval the empty list"
 eval (ns@(h : t), _) = let pairs = zip ns (t ++ [h])
                        in  foldr (\(a, b) acc -> distance a b + acc) 0 pairs

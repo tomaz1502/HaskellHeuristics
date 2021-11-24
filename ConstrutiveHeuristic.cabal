@@ -27,7 +27,7 @@ library
   exposed-modules:
       ConsHeur
       Node
-      TSP
+      TSPInstance
       Utils
   other-modules:
       Paths_ConstrutiveHeuristic
