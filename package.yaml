@@ -21,7 +21,6 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
-- vector >= 0.12
 - parsec >= 3.1.10
 
 library:
@@ -37,16 +36,4 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - ConstrutiveHeuristic
-    - vector >= 0.12
     - parsec >= 3.1.10
-
-tests:
-  ConstrutiveHeuristic-test:
-    main:                Spec.hs
-    source-dirs:         test
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - ConstrutiveHeuristic
