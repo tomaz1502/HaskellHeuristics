@@ -1,9 +1,11 @@
 {-# LANGUAGE RecordWildCards #-}
-module Lib (Node (..), distance, parseNode, parseTSPInstance) where
+
+module Lib where
 
 import           Text.Parsec
 import           Text.Parsec.String
 
+import           Data.List          (delete)
 import           Control.Monad
 import           Data.List.NonEmpty (NonEmpty)
 import qualified Data.List.NonEmpty as NE
@@ -16,6 +18,10 @@ data Node =
 
 instance Show Node where
   show Node {..} = unwords ["(", show xc, ",", show yc, ")"]
+
+instance Eq Node where
+  n1 == n2 = xc n1 == xc n2 &&
+             yc n1 == yc n2
 
 distance :: Node -> Node -> Double
 distance Node {xc = x1, yc = y1} Node {xc = x2, yc = y2} =
@@ -56,7 +62,9 @@ parseTSPInstance = do skipMany (noneOf " ")
                       skipLine
                       skipLine
                       nodes <- replicateM numNodes parseNode
-                      return $ TSPInstance numNodes nm (NE.fromList nodes)
+                      case nodes of
+                        [] -> error "empty list of nodes is not allowed"
+                        (h : t) -> return $ TSPInstance numNodes nm (h NE.:| t)
   where toInt s = read s :: Int
         skipLine = skipMany (noneOf "\n") >> skipMany (oneOf "\n")
 
@@ -70,17 +78,27 @@ eval (ns@(h : t), _) = let pairs = zip ns (t ++ [h])
 
 data ConsHeur =
   ConsHeur { initSol :: TSPInstance -> PartialSolution
-           , step :: TSPInstance -> PartialSolution -> PartialSolution
+           , step :: PartialSolution -> PartialSolution
            }
 
-solve :: TSPInstance -> ConsHeur -> Double
-solve ti ConsHeur {..} = eval $ applyN (numNodes ti) (step ti) (initSol ti)
+solve :: ConsHeur -> TSPInstance -> Double
+solve ConsHeur {..} ti = eval $ applyN (numNodes ti - length stNodes) step st
+  where st@(stNodes, _) = initSol ti
+
+initNearNeigh :: TSPInstance -> PartialSolution
+initNearNeigh ti = let (h, mt) = NE.uncons (nodes ti)
+                   in ([h], maybeNEToList mt)
+
+stepNearNeigh :: PartialSolution -> PartialSolution
+stepNearNeigh sol@(_, []) = sol
+stepNearNeigh (path, rem@(c1 : cs)) =
+        let border = last path
+            chosen = foldr (\n1 n2 -> if distance border n1 < distance border n2
+                                      then n1 else n2) c1 cs
+        in (path ++ [chosen], delete chosen rem)
 
 nearestNeighbour :: ConsHeur
-nearestNeighbour = ConsHeur initSol step
-  where initSol ti = let (h, mt) = NE.uncons (nodes ti) in
-                         ([h], maybeNEToList mt)
-        step ti = undefined
+nearestNeighbour = ConsHeur initNearNeigh stepNearNeigh
 
 -- utils
 -- sadly, doesn't exist in the prelude :(
