@@ -1,5 +1,4 @@
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE AllowAmbiguousTypes #-}
 module Lib (Node (..), distance, parseNode, parseTSPInstance) where
 
 import           Text.Parsec
@@ -56,7 +55,7 @@ parseTSPInstance = do skipMany (noneOf " ")
                       skipLine
                       skipLine
                       nodes <- replicateM numNodes parseNode
-                      return $ TSPInstance numNodes nm nodes
+                      return $ TSPInstance numNodes nm (NE.fromList nodes)
   where toInt s = read s :: Int
         skipLine = skipMany (noneOf "\n") >> skipMany (oneOf "\n")
 
