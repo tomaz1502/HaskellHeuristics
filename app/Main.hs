@@ -1,7 +1,15 @@
 module Main where
 
-import Lib
+import Text.Parsec
+
+import Lib (Node(..), distance, parseNode, parseTSPInstance)
+import Data.Either (fromRight)
+
+fromRight' :: Either a b -> b
+fromRight' (Right a) = a
+fromRight' (Left  _) = error "parse error"
 
 main :: IO ()
-main = someFunc
-
+main = interact (show . parse parseTSPInstance "")
+-- main = do line <- getLine
+--           print $ fromRight' $ parse parseNode "" line
