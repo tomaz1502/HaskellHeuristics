@@ -1,2 +1,2 @@
-# HaskellHeuristics
-Is it a good idea?
+# Haskell Heuristics
+Lets found out
