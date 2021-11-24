@@ -25,7 +25,10 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      ConsHeur
+      Node
+      TSP
+      Utils
   other-modules:
       Paths_ConstrutiveHeuristic
   hs-source-dirs:
