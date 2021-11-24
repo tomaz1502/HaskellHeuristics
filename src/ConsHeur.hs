@@ -9,12 +9,14 @@ import           Node
 import           Data.List          (delete)
 import qualified Data.List.NonEmpty as NE
 
-
+-- | A constructive heuristic
 data ConsHeur =
   ConsHeur { initSol :: TSPInstance -> PartialSolution
            , step :: PartialSolution -> PartialSolution
            }
 
+-- | Apply the given heuristic in the given tsp instance. Returns the cost of
+--   the solution found
 solve :: ConsHeur -> TSPInstance -> Double
 solve ConsHeur {..} ti = eval $ applyN (numNodes ti - length stNodes) step st
   where st@(stNodes, _) = initSol ti

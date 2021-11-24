@@ -11,6 +11,8 @@ import           Control.Monad
 import qualified Data.List.NonEmpty as NE
 import           Data.List.NonEmpty (NonEmpty)
 
+-- | information about the instance of the problem. nodes is the position in the
+--   2-d plane of each node
 data TSPInstance =
   TSPInstance { numNodes :: Int
               , instName :: String
@@ -41,8 +43,11 @@ parseTSPInstance = do skipMany (noneOf " ")
         jumpTwoLines = skipMany (oneOf "\n") >> skipLine >> skipLine
 
 
+-- | first element -> sequence of nodes in the solution,
+--   second element -> remaining nodes to be added
 type PartialSolution = ([Node], [Node])
 
+-- calculate the cost of the solution
 eval :: PartialSolution -> Double
 eval ([], _)         = error "trying to eval the empty list"
 eval (ns@(h : t), _) = let pairs = zip ns (t ++ [h])

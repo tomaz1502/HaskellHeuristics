@@ -5,6 +5,7 @@ module Node where
 import           Text.Parsec
 import           Text.Parsec.String
 
+-- | A point in the 2-d plane
 data Node =
   Node { xc :: Double
        , yc :: Double
