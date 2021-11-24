@@ -15,7 +15,7 @@ data Node =
        }
 
 instance Show Node where
-  show Node {..} = "(" ++ show xc ++ ", " ++ show yc ++ ")"
+  show Node {..} = unwords ["(", show xc, ",", show yc, ")"]
 
 distance :: Node -> Node -> Double
 distance Node {xc = x1, yc = y1} Node {xc = x2, yc = y2} =
@@ -28,9 +28,10 @@ data TSPInstance =
               }
 
 instance Show TSPInstance where
-  show TSPInstance {..} = "\nname: " ++ instName ++
-                          "\nnumNodes: " ++ show numNodes ++
-                          "\nnodes: " ++ show nodes ++ "\n"
+  show TSPInstance {..} = unlines [ "name: " ++ instName
+                                  , "numNodes: " ++ show numNodes
+                                  , "nodes: " ++ show nodes
+                                  ]
 
 parseNode :: Parser Node
 parseNode = do skipMany (noneOf " ")
