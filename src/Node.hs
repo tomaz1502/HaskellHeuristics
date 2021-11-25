@@ -23,10 +23,11 @@ distance Node {xc = x1, yc = y1} Node {xc = x2, yc = y2} =
   sqrt ((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
 
 parseNode :: Parser Node
-parseNode = do skipMany (noneOf " ")
-               skipMany (oneOf " ")
+parseNode = do skipMany space
+               skipMany (noneOf " ")
+               skipMany space
                xc <- toDouble <$> many (noneOf " ")
-               skipMany (oneOf " ")
-               yc <- toDouble <$> many1 (noneOf " \n")
+               skipMany space
+               yc <- toDouble <$> many1 (noneOf "\n")
                return $ Node xc yc
   where toDouble s = read s :: Double

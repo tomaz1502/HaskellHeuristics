@@ -26,12 +26,12 @@ instance Show TSPInstance where
                                   ]
 
 parseTSPInstance :: Parser TSPInstance
-parseTSPInstance = do skipMany (noneOf " ")
-                      skipMany (oneOf " ")
+parseTSPInstance = do skipMany (noneOf ":")
+                      skipMany (oneOf ":")
                       nm <- many (noneOf "\n")
                       jumpTwoLines
-                      skipMany (noneOf " ")
-                      skipMany (oneOf " ")
+                      skipMany (noneOf ":")
+                      skipMany (oneOf ":")
                       numNodes <- toInt <$> many (noneOf "\n")
                       jumpTwoLines
                       nodes <- replicateM numNodes parseNode
