@@ -2,21 +2,21 @@
 
 module TSPInstance where
 
-import           Node
+import           Node ( distance, Node, parseNode )
 
-import           Text.Parsec
-import           Text.Parsec.String
+import           Data.Vector (Vector, fromList, singleton)
+import qualified Data.Vector as V
+import           Text.Parsec ( noneOf, oneOf, many, skipMany )
+import           Text.Parsec.String ( Parser )
 
-import           Control.Monad
-import qualified Data.List.NonEmpty as NE
-import           Data.List.NonEmpty (NonEmpty)
+import           Control.Monad ( replicateM )
 
 -- | information about the instance of the problem. nodes is the position in the
 --   2-d plane of each node
 data TSPInstance =
   TSPInstance { numNodes :: Int
               , instName :: String
-              , nodes    :: NonEmpty Node
+              , nodes    :: Vector Node
               }
 
 instance Show TSPInstance where
@@ -37,7 +37,7 @@ parseTSPInstance = do skipMany (noneOf ":")
                       nodes <- replicateM numNodes parseNode
                       case nodes of
                         [] -> error "empty list of nodes is not allowed"
-                        (h : t) -> return $ TSPInstance numNodes nm (h NE.:| t)
+                        ns@(h : t) -> return $ TSPInstance numNodes nm (fromList ns)
   where toInt s = read s :: Int
         skipLine = skipMany (noneOf "\n") >> skipMany (oneOf "\n")
         jumpTwoLines = skipMany (oneOf "\n") >> skipLine >> skipLine
@@ -45,10 +45,11 @@ parseTSPInstance = do skipMany (noneOf ":")
 
 -- | first element -> sequence of nodes in the solution,
 --   second element -> remaining nodes to be added
-type PartialSolution = ([Node], [Node])
+type PartialSolution = (Vector Node, Vector Node)
 
 -- calculate the cost of the solution
 eval :: PartialSolution -> Double
-eval ([], _)         = error "trying to eval the empty list"
-eval (ns@(h : t), _) = let pairs = zip ns (t ++ [h])
-                       in  foldr (\(a, b) acc -> distance a b + acc) 0 pairs
+eval (ns, _) = case V.uncons ns of
+  Nothing -> error "trying to eval the empty list"
+  Just (h, t) -> let pairs = V.zip ns (t V.++ singleton h)
+                 in  V.foldr (\(a, b) acc -> distance a b + acc) 0 pairs

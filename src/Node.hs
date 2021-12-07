@@ -2,8 +2,8 @@
 
 module Node where
 
-import           Text.Parsec
-import           Text.Parsec.String
+import Text.Parsec ( noneOf, space, many1, many, skipMany )
+import Text.Parsec.String ( Parser )
 
 -- | A point in the 2-d plane
 data Node =

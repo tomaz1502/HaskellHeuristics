@@ -1,5 +1,8 @@
 module Utils where
 
+import           Data.Vector (Vector)
+import qualified Data.Vector as V
+
 import           Data.List.NonEmpty (NonEmpty)
 import qualified Data.List.NonEmpty as NE
 
@@ -15,3 +18,6 @@ applyN n f a = applyN (n - 1) f (f a)
 maybeNEToList :: Maybe (NonEmpty a) -> [a]
 maybeNEToList Nothing   = []
 maybeNEToList (Just xs) = NE.toList xs
+
+erase :: Eq a => Vector a -> a -> Vector a
+erase v a = V.takeWhile (/= a) v V.++ V.tail (V.dropWhile (/= a) v)
