@@ -2,7 +2,7 @@
 
 module ConsHeur where
 
-import           Utils ( maybeNEToList, applyN, erase )
+import           Utils ( applyN, erase )
 import           TSPInstance ( eval, PartialSolution, TSPInstance(numNodes, nodes) )
 import           Node ( distance )
 
