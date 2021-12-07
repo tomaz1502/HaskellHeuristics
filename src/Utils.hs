@@ -1,6 +1,6 @@
 module Utils where
 
-import           Data.Vector ( Vector )
+import           Data.Vector ( Vector, fromList )
 import qualified Data.Vector as V
 
 fromRight' :: Either a b -> b
@@ -14,3 +14,7 @@ applyN n f a = applyN (n - 1) f (f a)
 
 erase :: Eq a => Vector a -> a -> Vector a
 erase v a = V.takeWhile (/= a) v V.++ V.tail (V.dropWhile (/= a) v)
+
+-- v[l .. l + length u] := u
+replace :: Vector a -> Vector a -> Int -> Vector a
+replace v u l = V.update_ v (fromList [l .. l + length u]) u
