@@ -28,8 +28,10 @@ library
       ConsHeur
       Neighborhood
       Node
+      Tour
       TSPInstance
       Utils
+      VND
   other-modules:
       Paths_ConstrutiveHeuristic
   hs-source-dirs:

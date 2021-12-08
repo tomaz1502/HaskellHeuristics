@@ -42,18 +42,3 @@ parseTSPInstance = do skipMany (noneOf ":")
         skipLine = skipMany (noneOf "\n") >> skipMany (oneOf "\n")
         jumpTwoLines = skipMany (oneOf "\n") >> skipLine >> skipLine
 
-type Tour = Vector Node
-
--- | first element -> sequence of nodes in the solution,
---   second element -> remaining nodes to be added
-type PartialSolution = (Tour, Tour)
-
-evalT :: Tour -> Double
-evalT ns = case V.uncons ns of
-  Nothing -> error "trying to eval the empty list"
-  Just (h, t) -> let pairs = V.zip ns (t V.++ singleton h)
-                 in  V.foldr (\(a, b) acc -> distance a b + acc) 0 pairs
-
--- calculate the cost of the solution
-eval :: PartialSolution -> Double
-eval (ns, _) = evalT ns
