@@ -25,7 +25,7 @@ runConsHeur ConsHeur {..} ti = fst $ applyN (numNodes ti - length stNodes) step 
 initNearNeigh :: TSPInstance -> PartialSolution
 initNearNeigh ti =
   case V.uncons (nodes ti) of
-    Nothing -> error "empty list of nodes is not allowed"
+    Nothing     -> error "empty list of nodes is not allowed"
     Just (h, t) -> (Tour $ singleton h, Tour t)
 
 stepNearNeigh :: PartialSolution -> PartialSolution

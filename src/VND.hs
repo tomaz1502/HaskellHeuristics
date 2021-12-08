@@ -1,7 +1,5 @@
 module VND where
 
-import Debug.Trace
-
 import Neighborhood ( Neighborhood, getLocalBest )
 import Tour ( Tour, evalT )
 

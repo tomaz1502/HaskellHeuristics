@@ -1,5 +1,7 @@
 module Neighborhood where
 
+import Debug.Trace ( trace )
+
 import Data.Vector ( singleton, (!), Vector )
 import qualified Data.Vector
 import qualified Data.Vector as V
@@ -13,12 +15,17 @@ newtype Neighborhood = Neighborhood (Tour -> [Tour])
 run :: Neighborhood -> Tour -> [Tour]
 run (Neighborhood n) = n
 
+getBestNeighbor' :: Neighborhood -> Tour -> Tour
+getBestNeighbor' n t =
+  let b = getBestNeighbor n t
+      delta = evalT b - evalT t
+  in trace ("evalT b = " ++ show (evalT b) ++ "\nevalT n = " ++ show (evalT t) ++ "\n") b
+
 getBestNeighbor :: Neighborhood -> Tour -> Tour
 getBestNeighbor n t =
   case run n t of
     [] -> t
     ns -> minimum ns
-
 
 getLocalBest :: Neighborhood -> Tour -> Tour
 getLocalBest n t =
