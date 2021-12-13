@@ -15,12 +15,13 @@ instance Show Node where
   show Node {..} = unwords ["(", show xc, ",", show yc, ")"]
 
 instance Eq Node where
-  n1 == n2 = xc n1 == xc n2 &&
-             yc n1 == yc n2
+  n1 == n2 = abs (xc n1 - xc n2) < eps &&
+             abs (yc n1 - yc n2) < eps
+    where eps = 10 ^ (-9)
 
 instance Ord Node where
   n1 < n2
-    | xc n1 /= xc n2 = xc n1 < xc n2
+    | xc n1 /= xc n2  = xc n1 < xc n2
     | otherwise       = yc n1 < yc n2
   n1 <= n2 = n1 < n2 || n1 == n2
 
