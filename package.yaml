@@ -23,6 +23,8 @@ dependencies:
 - base >= 4.7 && < 5
 - parsec >= 3.1.10
 - vector >= 0.12
+- random >= 1.2
+- mtl >= 2.2
 
 library:
   source-dirs: src
@@ -39,3 +41,5 @@ executables:
     - ConstrutiveHeuristic
     - parsec >= 3.1.10
     - vector >= 0.12
+    - random >= 1.2
+    - mtl >= 2.2
