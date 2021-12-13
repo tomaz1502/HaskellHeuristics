@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      Check
       ConsHeur
       Grasp
       Neighborhood
@@ -38,7 +39,8 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      Unique >=0.4
+    , base >=4.7 && <5
     , mtl >=2.2
     , parsec >=3.1.10
     , random >=1.2
@@ -54,6 +56,7 @@ executable ConstrutiveHeuristic-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       ConstrutiveHeuristic
+    , Unique >=0.4
     , base >=4.7 && <5
     , mtl >=2.2
     , parsec >=3.1.10

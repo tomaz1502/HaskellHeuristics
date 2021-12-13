@@ -25,6 +25,7 @@ dependencies:
 - vector >= 0.12
 - random >= 1.2
 - mtl >= 2.2
+- Unique >= 0.4
 
 library:
   source-dirs: src
@@ -43,3 +44,4 @@ executables:
     - vector >= 0.12
     - random >= 1.2
     - mtl >= 2.2
+    - Unique >= 0.4

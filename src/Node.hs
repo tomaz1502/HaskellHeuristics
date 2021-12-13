@@ -18,6 +18,12 @@ instance Eq Node where
   n1 == n2 = xc n1 == xc n2 &&
              yc n1 == yc n2
 
+instance Ord Node where
+  n1 < n2
+    | xc n1 /= xc n2 = xc n1 < xc n2
+    | otherwise       = yc n1 < yc n2
+  n1 <= n2 = n1 < n2 || n1 == n2
+
 distance :: Node -> Node -> Double
 distance Node {xc = x1, yc = y1} Node {xc = x2, yc = y2} =
   sqrt ((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
