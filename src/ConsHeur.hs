@@ -7,10 +7,11 @@ import           TSPInstance ( TSPInstance(numNodes, nodes, TSPInstance) )
 import           Tour ( eval, PartialSolution, Tour(Tour) )
 import           Node ( distance )
 
-import           Control.Monad.State
+import Control.Monad.State
+    ( MonadState(state), replicateM, runState, State )
 import           Data.Vector (uncons, singleton)
 import qualified Data.Vector as V
-import           System.Random
+import System.Random ( mkStdGen, Random(random), StdGen )
 
 
 -- | A constructive heuristic
@@ -67,12 +68,19 @@ stepRandom = state $ \(rng, sol) -> ((), go rng sol)
                 cmin      = minimum dists
                 cmax      = maximum dists
                 thres     = cmin + alpha * (cmax - cmin)
-                cands     = V.filter (\n -> distance border n < thres) rem
+                cands     = V.filter (\n -> distance border n <= thres) rem
                 (i, rng') = random rng
-                chosen    = cands V.! i
+                chosen    = cands V.! (abs i `mod` length cands)
             in (rng', (Tour $ path V.++ singleton chosen, Tour $ erase rem chosen))
         alpha :: Double
         alpha = 0.1
 
 randomConstructive :: RandCons
 randomConstructive = RandCons initRandom stepRandom
+
+runRandom :: RandCons -> TSPInstance -> Tour
+runRandom RandCons {..} ti =
+        let initial@(Tour stNodes, _) = initSolR ti
+            stAction = replicateM (numNodes ti - length stNodes) stepR
+            (_, (_, (tour, _))) = runState stAction (mkStdGen 42, initial)
+        in tour

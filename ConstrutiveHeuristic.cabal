@@ -29,7 +29,6 @@ library
       Grasp
       Neighborhood
       Node
-      RandomTest
       Tour
       TSPInstance
       Utils
